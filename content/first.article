@@ -1,0 +1,68 @@
+First article
+17 Oct 2016
+Tags: first
+
+Serge Voilokov
+
+* Introduction
+
+First article is written mostly for myself as an instruction
+how to create new blog article.
+
+* Creating new blog article
+
+Create new file with .article extension in `contents` directory.
+
+Copy article template to the new file
+
+	First article
+	17 Oct 2016
+	Tags: first
+
+	Serge Voilokov
+
+	* Introduction
+
+	Starting the blog.
+
+	* Article formatting rules
+
+	This is second topic.
+
+Code examples indented by 1 tab character
+
+	regular text
+
+		// source code
+		func main() {
+		}
+
+result
+
+	func main() {
+	}
+
+Code insertion 
+
+	.code cgi-server.go /handler/,/handler/
+
+results
+
+.code cgi-server.go /handler/,/handler/
+
+Playground
+
+	.play -edit cgi-server.go /handler/,/handler/
+
+.play -edit cgi-server.go /handler/,/handler/
+
+It should display `Run` button but it doesn't for some reason.
+
+Hyperlinks
+
+	[[http://golang.org][golang website]]
+
+results
+
+[[http://golang.org][golang website]]
+
