@@ -12,7 +12,7 @@ func main() {
 	fmt.Println("starting blog on http://localhost:8081/blog")
 
 	blog := cgi.Handler{}
-	blog.Path = "./svblog"
+	blog.Path = "./blog"
 
 	mux := http.NewServeMux()
 	mux.Handle("/blog/", &blog)

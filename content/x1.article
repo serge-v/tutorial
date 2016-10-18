@@ -1,0 +1,84 @@
+Exercise 1. helloworld and worldtime
+18 Oct 2016
+Tags: first
+
+Serge Voilokov
+
+* Introduction
+
+In first exercise we will create minimal dynamic web page using Go language.
+It will run locally and will be available on [[http://localhost:8085][http://localhost:8085]] url.
+
+Also we will create a page which shows a current time for 5 different time zones.
+
+* Install Go
+
+Go to [[https://golang.org/dl/][download page]] and install msi file. On Windows it
+should install into `c:\Go`.
+
+Open terminal and run command
+
+	> go version
+
+It should output current golang version
+
+	go version go1.7 darwin/amd64
+
+* Prepare source file
+
+Take [[x1/helloworld.go][helloworld.go]] file
+
+.code x1/helloworld.go
+
+* Running program
+
+Run in terminal to build program
+
+	go build helloworld.go
+
+Make test run
+
+	./helloworld
+
+Click on this link  [[http://localhost:8085][http://localhost:8085]] to see "hello world"
+string on web page.
+So you can change
+	
+	fmt.Fprintf(w, "hello world\n")
+
+to send any text to webpage.
+
+* Display something useful
+
+Let's create a webpage that will show current time for New York, San Diego, Minsk,
+Tallinn, Moscow and GMT.
+
+Take [[x1/worldtime.go][worldtime.go]] file localy and take a look.
+
+I created new function `printTime` to output current time for specified timezone.
+
+.code x1/worldtime.go /^func printTime/,/^}/
+
+Format string "%-20s" means align timezone name left and pad 20 charachters right.
+
+Now we can call `printTime` several times in `hello` function for each time zone.
+
+.code x1/worldtime.go /^func hello/,/^}/
+
+Run in terminal to build program
+
+	go build worldtime.go
+
+Make test run
+
+	./worldtime
+
+Click on this link  [[http://localhost:8085][http://localhost:8085]].
+You should see this program output
+
+	GMT                 :  2016-10-18 03:50:42.608345705 +0000 GMT
+	America/New_York    :  2016-10-17 23:50:42.608421694 -0400 EDT
+	America/Los_Angeles :  2016-10-17 20:50:42.608489052 -0700 PDT
+	Europe/Minsk        :  2016-10-18 06:50:42.608542717 +0300 MSK
+	Europe/Tallinn      :  2016-10-18 06:50:42.608579206 +0300 EEST
+	Europe/Moscow       :  2016-10-18 06:50:42.608607544 +0300 MSK

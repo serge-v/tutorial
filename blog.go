@@ -13,7 +13,7 @@ var conf = blog.Config {
 	TemplatePath: "template",
 	BaseURL: "http://localhost",
 	BasePath: "/blog",
-	GodocURL: "",
+	GodocURL: "http://golang.org",
 	Hostname: "hostname",
 	HomeArticles: 5,
 	FeedArticles: 5,

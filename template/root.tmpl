@@ -54,17 +54,16 @@
 
 <div id="topbar"><div class="container">
 
-<div class="top-heading" id="heading-wide"><a href="{{.GodocURL}}/">The Go Programming Language</a></div>
+<div class="top-heading" id="heading-wide">Golang Tutorial</a></div>
 <div class="top-heading" id="heading-narrow"><a href="{{.GodocURL}}/">Go</a></div>
 <a href="#" id="menu-button"><span id="menu-button-arrow">&#9661;</span></a>
 <form method="GET" action="{{.GodocURL}}/search">
 <div id="menu">
 <a href="{{.GodocURL}}/doc/">Documents</a>
 <a href="{{.GodocURL}}/pkg/">Packages</a>
-<a href="{{.GodocURL}}/project/">The Project</a>
 <a href="{{.GodocURL}}/help/">Help</a>
 <a href="{{.BasePath}}/">Blog</a>
-<input type="text" id="search" name="q" class="inactive" value="Search" placeholder="Search">
+<input type="text" id="search" name="q" class="inactive" value="" placeholder="Search">
 </div>
 </form>
 
@@ -92,17 +91,12 @@
 	<li><a href='//golang.org/doc/install.html'>Install Go</a></li>
 	<li><a href='//tour.golang.org/'>A Tour of Go</a></li>
 	<li><a href='//golang.org/doc/'>Go Documentation</a></li>
-	<li><a href='//groups.google.com/group/golang-nuts'>Go Mailing List</a></li>
-	<li><a href='//plus.google.com/101406623878176903605'>Go on Google+</a></li>
-	<li><a href='//plus.google.com/112164155169467723645/posts'>Go+ Community</a></li>
-	<li><a href='//twitter.com/golang'>Go on Twitter</a></li>
 	</ul>
 	
 	<p><a href="{{.BasePath}}/index">Blog index</a></p>
 </div><!-- #sidebar -->
 
 <div id="content">
-	<h1><a href="{{.BasePath}}/">The Go Blog</a></h1>
 	{{template "content" .}}
 </div><!-- #content -->
 

@@ -1,0 +1,23 @@
+Exercise 2. Deploy helloworld and worldtime to production
+19 Oct 2016
+Tags: first
+
+Serge Voilokov
+
+* Introduction
+
+We developed and tested helloworld and worldtime programs locally. To make it available
+for a public we need to deploy it to our cloud web server.
+
+I created virtual web server [[http://wet.voilokov.com][wet.voilokov.com]] on some cloud provider.
+We will deploy our programs to that server so they will be available as
+
+[[http://wet.voilokov.com/helloworld][http://wet.voilokov.com/helloworld]]
+
+and
+
+[[http://wet.voilokov.com/worldtime][http://wet.voilokov.com/worldtime]].
+
+* The problem
+
+Web server is running apache-2.4 and we need to change our 

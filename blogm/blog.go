@@ -71,9 +71,6 @@ type Server struct {
 
 // NewServer constructs a new Server using the specified config.
 func NewServer(cfg Config) (*Server, error) {
-
-	println("newserver")
-
 	present.PlayEnabled = cfg.PlayEnabled
 
 	root := filepath.Join(cfg.TemplatePath, "root.tmpl")
@@ -104,21 +101,17 @@ func NewServer(cfg Config) (*Server, error) {
 		return nil, err
 	}
 
-	println("loading")
 	// Load content.
 	err = s.loadDocs(filepath.Clean(cfg.ContentPath))
 	if err != nil {
 		return nil, err
 	}
-	println("loaded", len(s.docs))
 
-	println("atoming")
 	err = s.renderAtomFeed()
 	if err != nil {
 		return nil, err
 	}
 
-	println("jsoning")
 	err = s.renderJSONFeed()
 	if err != nil {
 		return nil, err
@@ -384,7 +377,6 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		d = rootData{BasePath: s.cfg.BasePath, GodocURL: s.cfg.GodocURL}
 		t *template.Template
 	)
-	
 	switch p := strings.TrimPrefix(r.URL.Path, s.cfg.BasePath); p {
 	case "/":
 		d.Data = s.docs
