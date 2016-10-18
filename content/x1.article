@@ -26,7 +26,9 @@ It should output current golang version
 
 * Prepare source file
 
-Take [[x1/helloworld.go][helloworld.go]] file
+Create working directory for example `c:\Go\tutorial`
+
+Download [[x1/helloworld.go][helloworld.go]] file to the working directory.
 
 .code x1/helloworld.go
 
@@ -34,11 +36,12 @@ Take [[x1/helloworld.go][helloworld.go]] file
 
 Run in terminal to build program
 
+	cd c:\go\tutorial
 	go build helloworld.go
 
 Make test run
 
-	./helloworld
+	helloworld
 
 Click on this link  [[http://localhost:8085][http://localhost:8085]] to see "hello world"
 string on web page.
@@ -71,7 +74,7 @@ Run in terminal to build program
 
 Make test run
 
-	./worldtime
+	worldtime
 
 Click on this link  [[http://localhost:8085][http://localhost:8085]].
 You should see this program output

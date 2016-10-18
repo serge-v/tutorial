@@ -18,6 +18,145 @@ and
 
 [[http://wet.voilokov.com/worldtime][http://wet.voilokov.com/worldtime]].
 
-* The problem
+* Adopt code for Apache Web Server
 
-Web server is running apache-2.4 and we need to change our 
+Localy we run our programs using builtin web server to serve content on localhost:8085.
+In production Apache Web Server is already started on port 80.
+
+We should modify the code to use cgi interface instead of starting local server.
+
+So our `main` function
+
+.code x1/helloworld.go /^func main/,/^}/
+
+uses new `local` variable to switch between local and cgi mode.
+
+.code x2/helloworld.go /^var local/,/^}/
+
+We can run and debug it locally as a web server
+
+	helloworld -local
+
+And in production Apache will run it without parameters something like
+
+	REQUEST_METHOD=GET SERVER_PROTOCOL=HTTP/1.1 helloworld
+
+You can run this command also and you will see full http response
+
+	Status: 200 OK
+	Content-Type: text/html; charset=utf-8
+
+	hello world. local = false
+
+
+Of course we can install Apache on our computer and discard `ListenAndServe` but I wouldn't
+ do it. Three lines of code is simpler to maintain than Apache.
+
+
+* Building for production
+
+Our local OS is Windows but production runs FreeBSD so we need to recompile source for a
+differrent architecture. It is easy in golang.
+
+	GOOS=freebsd GOARCH=amd64 go build helloworld.go
+
+Run command to get information about built file
+
+	file helloworld
+
+Result contains `FreeBSD` and `executable` keywords so probably everything is OK
+
+	helloworld: ELF 64-bit LSB executable, x86-64, version 1 (FreeBSD), statically linked, not stripped
+
+* Deploying to production
+
+Now we should copy `helloworld` executable to the production server. I sent to you special
+tool `ocean`. You need to run to see if it is working
+
+	ocean -status
+
+It should print hostname and system basic info
+
+	oceanarium
+	17:40  up 36 days,  6:49, 4 users, load averages: 1.56 1.50 1.50
+
+Make sure `helloworld` and `ocean` reside in the same directory.
+To deploy `helloworld` to the prod run
+
+	ocean -deploy helloworld
+
+
+Now check [[http://wet.voilokov.com/helloworld][http://wet.voilokov.com/helloworld]].
+Browser should show page with this text
+
+	hello world. local = false
+
+* Deploy worldtime
+
+Put new code to worldtime.go
+
+	var local = flag.Bool("local", false, "start local server for debugging")
+
+	func main() {
+		flag.Parse()
+
+		if *local {
+			fmt.Println("=== starting server on http://localhost:8085/ ===")
+			http.HandleFunc("/", hello)
+			log.Fatal(http.ListenAndServe(":8085", nil))
+			return
+		}
+
+		err := cgi.Serve(http.HandlerFunc(hello))
+		if err != nil {
+			panic(err)
+		}
+	}
+
+Run
+
+	GOOS=freebsd GOARCH=amd64 go build worldtime.go
+	ocean -deploy worldtime
+
+Check [[http://wet.voilokov.com/worldtime][http://wet.voilokov.com/worldtime]]
+
+* Summary
+
+I summarized all above complicated steps in short instructions. That's all you need.
+
+To develop and debug use the cycle
+
+	// edit your code
+
+	// build
+	go build worldtime.go
+
+	// run
+	worldtime -local
+
+	// check
+	// refresh browser on http://localhost:8085/
+	
+	// stop
+	// Ctrl+C to stop server
+
+	// repeat
+
+Deploy to the prod
+
+	// build for the FreeBSD
+	GOOS=freebsd GOARCH=amd64 go build worldtime.go
+
+	// deploy
+	ocean -deploy helloworld
+
+	// check
+	// refresh http://wet.voilokov.com/worldtime
+
+
+
+
+
+
+
+
