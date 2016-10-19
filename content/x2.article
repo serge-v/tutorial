@@ -81,20 +81,27 @@ Result contains `FreeBSD` and `executable` keywords so probably everything is OK
 * Deploying to production
 
 Now we should copy `helloworld` executable to the production server. I sent to you special
-tool `ocean`. You need to run to see if it is working
+`ocean` tool by email. You need to run to see if it is working
 
 	ocean -status
 
-It should print hostname and system basic info
+It will show contents of `/usr/local/www/wet` directory on server
 
-	oceanarium
-	17:40  up 36 days,  6:49, 4 users, load averages: 1.56 1.50 1.50
+	-rwxr-xr-x  1 freebsd  freebsd  8001339 Oct 19 02:08 blog
+	drwxr-xr-x  4 freebsd  freebsd      512 Oct 19 02:16 content
+	drwxrwxrwx  2 root     wheel        512 Jul 18 01:26 logs
+	-rwxr-xr-x  1 root     wheel    5515668 Oct 19 01:46 main
+	drwxr-xr-x  2 freebsd  freebsd      512 Oct 17 11:36 template
+	-rw-r--r--  1 root     wheel        388 Oct 19 01:41 wet.conf
 
 Make sure `helloworld` and `ocean` reside in the same directory.
 To deploy `helloworld` to the prod run
 
 	ocean -deploy helloworld
 
+Make sure `helloworld` appeared in directory listing. Run
+
+	ocean -status
 
 Now check [[http://wet.voilokov.com/helloworld][http://wet.voilokov.com/helloworld]].
 Browser should show page with this text
@@ -127,6 +134,7 @@ Run
 
 	GOOS=freebsd GOARCH=amd64 go build worldtime.go
 	ocean -deploy worldtime
+	ocean -status
 
 Check [[http://wet.voilokov.com/worldtime][http://wet.voilokov.com/worldtime]]
 
