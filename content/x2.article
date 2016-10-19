@@ -29,9 +29,19 @@ So our `main` function
 
 .code x1/helloworld.go /^func main/,/^}/
 
-uses new `local` variable to switch between local and cgi mode.
+now uses `local` variable to switch between local and cgi mode.
 
 .code x2/helloworld.go /^var local/,/^}/
+
+Also add `flag` to the import section
+
+	import (
+		"fmt"
+		"net/http"
+		"net/http/cgi" // add this,
+		"log"
+		"flag"         // and this !!!
+	)
 
 We can run and debug it locally as a web server
 
@@ -122,7 +132,7 @@ Check [[http://wet.voilokov.com/worldtime][http://wet.voilokov.com/worldtime]]
 
 * Summary
 
-I summarized all above complicated steps in short instructions. That's all you need.
+I summarized all above complicated steps into short instruction. That's all you need.
 
 To develop and debug use the cycle
 
