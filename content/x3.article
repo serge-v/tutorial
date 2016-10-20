@@ -1,0 +1,87 @@
+X3. Simplifying building steps
+20 Oct 2016
+Tags: first
+
+Serge Voilokov
+
+* Introduction
+
+In previous article we compiled a summary with the list of build/run/deploy commands.
+
+They are simple but we need to remember boring details like target 
+architecture and OS. This is annoying. And it consumes time to do the same typing every time.
+
+Ideally we just want two commands to run locally and to deploy to the prod.
+Simplest solution is to use a `make` tool.
+We need to create a Makefile for it.
+
+* Creating a Makefile
+
+Makefile is a text file containing building rules. It says what to build, when and how.
+
+	result: file
+		commands
+
+In english it means:
+
+	build a result program: when file changed
+		using this commands
+
+Rule should be indented by tab character. Not by 4 or 8 spaces. Rules can be multiple.
+
+	|
+	|result: dependencies...
+	|<-TAB->rule1
+	|<-TAB->rule2
+	|
+
+I want to build helloworld or worldtime and run it.
+
+	helloworld:
+		go build helloworld.go         # using go compiler
+		./helloworld                   # and then run
+		firefox http://localhost:8085  # optionally you can refresh browser
+
+	worldtime:
+		go build worldtime.go
+		./worldtime
+
+Now we can build and run the programs using one command
+
+	make helloworld
+
+Or
+
+	make worldtime
+
+Rule for deploying to prod. Both programs together
+
+	prod:
+		GOOS=freebsd GOARCH=amd64 go build helloworld.go
+		ocean -deploy helloworld
+		GOOS=freebsd GOARCH=amd64 go build worldtime.go
+		ocean -deploy worldtime
+		rm worldtime
+
+To deploy to prod run
+
+	make prod
+
+You can view whole [[x2/Makefile][Makefile]].
+
+* Summary
+
+Run locally
+
+	make helloworld
+
+Or
+
+	make worldtime
+
+Deploy
+
+	make prod
+
+And use autocomplete.
+

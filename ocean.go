@@ -67,6 +67,7 @@ func main() {
 		}
 		session.Stdin = f
 		
+		fmt.Printf("copying %s to the ocean\n", fname)
 		cmd := "cat > " + fname
 		if err := session.Run(cmd); err != nil {
 			log.Fatal("failed to run: ", err)
@@ -83,9 +84,11 @@ func main() {
 			"sudo chmod +x /usr/local/www/wet/{fname};" +
 			"ls -l /usr/local/www/wet/", "{fname}", fname, -1)
 
+		fmt.Println("deploying " + fname)
 		if err := session.Run(cmd); err != nil {
 			log.Fatal("failed to run:", err)
 		}
+		fmt.Println("done")
 
 	} else if *status {
 		if err := session.Run("ls -l /usr/local/www/wet/"); err != nil {
