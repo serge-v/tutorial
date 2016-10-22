@@ -1,4 +1,4 @@
-First article
+0. how to create a new article
 17 Oct 2016
 Tags: first
 
@@ -6,65 +6,25 @@ Serge Voilokov
 
 * Introduction
 
-First article is written mostly for myself as an instruction
+This article is written mostly for myself as an instruction
 how to create new blog article.
 
 * Creating new blog article
 
-Create new file with .article extension in `contents` directory.
-
-Copy article template to the new file
-
-	First article
-	17 Oct 2016
-	Tags: first
-
-	Serge Voilokov
-
-	* Introduction
-
-	Starting the blog.
-
-	* Article formatting rules
-
-	This is second topic.
+Download and rename [[first.article][next.article]].
 
 * Formatting
 
-Code examples indented by 1 tab character
+Formatting is described here [[https://godoc.org/golang.org/x/tools/present][]]
 
-	regular text
+or if web is unavailable run
 
-		// source code
-		func main() {
-		}
+	go doc golang.org/x/tools/present
 
-result
+* Deploying
 
-	func main() {
-	}
+Push to git, then run
 
-Code insertion 
+	./deploy.sh
 
-	.code cgi-server.go /handler/,/handler/
-
-results
-
-.code cgi-server.go /handler/,/handler/
-
-Playground
-
-	.play -edit cgi-server.go /handler/,/handler/
-
-.play -edit cgi-server.go /handler/,/handler/
-
-It should display `Run` button but it doesn't for some reason.
-
-Hyperlinks
-
-	[[http://golang.org][golang website]]
-
-results
-
-[[http://golang.org][golang website]]
 

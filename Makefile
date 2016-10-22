@@ -25,4 +25,6 @@ deploy_blog: ocean
 	./deploy.sh
 
 deploy_wethome: ocean
-	GOOS=freebsd GOARCH=amd64 go build 
+	GOOS=freebsd GOARCH=amd64 go build wethome.go
+	./ocean -deploy wethome
+	rm wethome

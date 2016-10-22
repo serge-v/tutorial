@@ -1,0 +1,187 @@
+X4. html forms
+21 Oct 2016
+Tags: first
+
+Serge Voilokov
+
+* Introduction
+
+We will learn how to create basic interactive web app using go.
+
+For exampe we have a page with an article and want to implement basic comments functionality
+so everybody can leave a comment. It can look like this
+
+.html x4/comments.html
+
+* Design an article UI
+
+Article is a html page. It has `form` at the end to submit author and comment back
+to the server
+
+	<html>
+	<body>
+
+	<h3>Article about something</h3>
+	<p>Very long text of the article about something.</p>
+	<p><i>By author</i></p>
+
+	<h3>Comments:</h3>
+	{placeholder_for_comments}
+
+	<h3>Add comment:</h3>
+
+	<form>
+		<input name="comment" type="input" size="40"><br>
+		by <input name="author" type="input" size="30"><br>
+		<input type="submit" value="Add">
+	</form>
+
+	</body>
+	</html>
+
+When visitor clicks 'Add' button our server receives `http.Request` with
+`comment` and `author` values. In response we should return the article along with
+added comments.
+
+* Create a plan
+
+Our web application should do a lot of things. Programming goes easier when you have a
+detailed plan
+
+- Parse incoming request
+- Load comments text from file
+- Append new comment to all comments
+- Save all comments to file
+- Load article file
+- Insert comments to the end of article
+- Write everything to the response
+
+* Create program skeleton
+
+Lets convert our human readable plan to the Go language.
+It is mostly line to line conversion from the plan
+
+	func requestHandler(w http.ResponseWriter, r *http.Request) {
+		comment, author := parseRequest(r)
+		comments := loadCommentsFile()
+		comments = appendComment(comments, comment, author)
+		saveCommentsFile(comments)
+		article := loadArticleFile()
+		article = insertComments(article, comments)
+		fmt.Fprintf(w, article)
+	}
+
+So we need to implement all these functions
+
+	func parseRequest(r *http.Request) (string, string) {
+	}
+
+	func loadCommentsFile() string {
+	}
+
+	func appendComment(text, row string) {
+	}
+
+	func saveCommentsFile(text string) {
+	}
+
+	func insertComments(article, comment string) string {
+	}
+	
+Also we copy a CGI handler and server from the previous articles
+
+	var local = flag.Bool("local", false, "start local server for debugging")
+	
+	func main() {
+		flag.Parse()
+	
+		if *local {
+			fmt.Println("=== starting server on http://localhost:8085/ ===")
+			http.HandleFunc("/", requestHandler)
+			log.Fatal(http.ListenAndServe(":8085", nil))
+			return
+		}
+		
+		err := cgi.Serve(http.HandlerFunc(commentsHandler))
+		if err != nil {
+			panic(err)
+		}
+	}
+
+And copy header import section
+
+	package main
+
+	import (
+		"fmt"
+		"net/http"
+		"net/http/cgi"
+		"log"
+		"flag"
+	)
+
+* Implementing internals
+
+parseRequest takes request and returns comment and author of the comment as a strings
+
+	func parseRequest(r *http.Request) (string, string) {
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, "cannot parse form", 500)
+			return
+		}
+
+		author := r.Form["author"]
+		comment := r.Form["comment"]
+
+		return author, comment
+	}
+
+loadCommentsFile returns all saved comments text
+
+	func loadCommentsFile() string {
+		text, err := ioutil.ReadAll()
+	}
+
+appendComment appends row to all text and returns all text as a string
+
+	func appendComment(text, row string) {
+	}
+
+saveCommentsFile saves text to file
+
+	func saveCommentsFile(text string) {
+	}
+
+insertComments inserts comments to the end of article and returns article as a string
+
+	func insertComments(article, comment string) string {
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
