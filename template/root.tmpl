@@ -9,7 +9,7 @@
 	<meta name="theme-color" content="#375EAB">
 	<title>{{template "title" .}}</title>
 	<link type="text/css" rel="stylesheet" href="style.css">
-	<link rel="alternate" type="application/atom+xml" title="blog.golang.org - Atom Feed" href="//blog.golang.org/feed.atom" />
+	<link rel="alternate" type="application/atom+xml" title="blog.golang.org - Atom Feed" href="/blog/feed.atom" />
 	<script type="text/javascript">window.initFuncs = [];</script>
 	<style>
 		#sidebar {
@@ -102,13 +102,11 @@
 
 <div id="footer">
 	<p>
-	Except as
-	<a href="https://developers.google.com/site-policies#restrictions">noted</a>,
-	the content of this page is licensed under the Creative Commons
+	The content of this page is licensed under the Creative Commons
 	Attribution 3.0 License,<br>
 	and code is licensed under a <a href="//golang.org/LICENSE">BSD license</a>.<br>
-	<a href="//golang.org/doc/tos.html">Terms of Service</a> | 
-	<a href="//www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+	<a href="https://github.com/serge-v/tutorial">Source on Github</a> | 
+	<a href="mail:serge0x76@gmail.com">Email to editor</a>
 	</p>
 </div><!-- #footer -->
 
@@ -116,39 +114,6 @@
 </div><!-- #page -->
 
 </body>
-<script src="/lib/godoc/jquery.js"></script>
-<script src="/lib/godoc/playground.js"></script>
-<script src="/lib/godoc/play.js"></script>
-<script src="/lib/godoc/godocs.js"></script>
-<script>
-$(function() {
-	// Insert line numbers for all playground elements.
-	$('.playground > pre.numbers, .code > pre.numbers').each(function() {
-		var $spans = $(this).find('> span');
-
-		// Compute width of number column (including trailing space).
-		var max = 0;
-		$spans.each(function() {
-			var n = $(this).attr('num')*1;
-			if (n > max) max = n;
-		});
-		var width = 2;
-		while (max > 10) {
-			max = max / 10;
-			width++;
-		}
-
-		// Insert line numbers with space padding.
-		$spans.each(function() {
-			var n = $(this).attr('num')+' ';
-			while (n.length < width) n = ' '+n;
-			$('<span class="number">').text(n).insertBefore(this);
-		});
-	});
-
-	initPlayground(new HTTPTransport());
-});
-</script>
 </html>
 {{end}}
 

@@ -3,10 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"net/http/cgi"
-	"log"
 	"time"
-	"os"
+	"./lib"
 )
 
 func printTime(w http.ResponseWriter, timezone string) {
@@ -20,7 +18,7 @@ func printTime(w http.ResponseWriter, timezone string) {
 	}
 }
 
-func hello(w http.ResponseWriter, req *http.Request) {
+func getTimes(w http.ResponseWriter, req *http.Request) {
 	printTime(w, "GMT")
 	printTime(w, "America/New_York")
 	printTime(w, "America/Los_Angeles")
@@ -30,17 +28,5 @@ func hello(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	protocol := os.Getenv("SERVER_PROTOCOL")
-
-	if len(protocol) == 0 {
-		fmt.Println("=== starting server on http://localhost:8085/ ===")
-		http.HandleFunc("/", hello)
-		log.Fatal(http.ListenAndServe(":8085", nil))
-		return
-	}
-
-	err := cgi.Serve(http.HandlerFunc(hello))
-	if err != nil {
-		panic(err)
-	}
+	lib.Serve(getTimes)
 }
