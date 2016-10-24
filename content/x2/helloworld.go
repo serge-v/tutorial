@@ -5,25 +5,24 @@ import (
 	"net/http"
 	"net/http/cgi"
 	"log"
-	"flag"
+	"os"
 )
 
 func hello(w http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(w, "hello world. local = %v\n", *local)
+	fmt.Fprintf(w, "hello world\n")
 }
 
-var local = flag.Bool("local", false, "start local server for debugging")
-
 func main() {
-	flag.Parse()
 
-	if *local {
+	protocol := os.Getenv("SERVER_PROTOCOL")
+
+	if len(protocol) == 0 {
 		fmt.Println("=== starting server on http://localhost:8085/ ===")
 		http.HandleFunc("/", hello)
 		log.Fatal(http.ListenAndServe(":8085", nil))
 		return
 	}
-	
+
 	err := cgi.Serve(http.HandlerFunc(hello))
 	if err != nil {
 		panic(err)

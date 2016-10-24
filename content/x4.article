@@ -24,15 +24,16 @@ to the server
 	<h3>Article about something</h3>
 	<p>Very long text of the article about something.</p>
 	<p><i>By author</i></p>
+	<hr>
 
 	<h3>Comments:</h3>
 	{placeholder_for_comments}
 
 	<h3>Add comment:</h3>
-
-	<form>
-		<input name="comment" type="input" size="40"><br>
-		by <input name="author" type="input" size="30"><br>
+	<hr>
+	<form method="POST">
+		comment: <input name="comment" type="input" size="40"><br>
+		by: <input name="author" type="input" size="30"><br>
 		<input type="submit" value="Add">
 	</form>
 
@@ -43,70 +44,39 @@ When visitor clicks 'Add' button our server receives `http.Request` with
 `comment` and `author` values. In response we should return the article along with
 added comments.
 
+Save it as article.html
+
 * Create a plan
 
 Our web application should do a lot of things. Programming goes easier when you have a
 detailed plan
 
-- Parse incoming request
+- Load article file
 - Load comments text from file
+- If request method is GET write the response and return
+- Parse incoming POST request
 - Append new comment to all comments
 - Save all comments to file
-- Load article file
 - Insert comments to the end of article
-- Write everything to the response
+- Redirect to itself so next GET method will serve the page
 
 * Create program skeleton
 
 Lets convert our human readable plan to the Go language.
 It is mostly line to line conversion from the plan
 
-	func requestHandler(w http.ResponseWriter, r *http.Request) {
-		comment, author := parseRequest(r)
-		comments := loadCommentsFile()
-		comments = appendComment(comments, comment, author)
-		saveCommentsFile(comments)
-		article := loadArticleFile()
-		article = insertComments(article, comments)
-		fmt.Fprintf(w, article)
-	}
+.code x4/form.go /^func requestHandler/,/^}/
 
 So we need to implement all these functions
 
-	func parseRequest(r *http.Request) (string, string) {
-	}
+.code x4/form.go /^func loadArticleFile/
+.code x4/form.go /^func loadCommentsFile/
+.code x4/form.go /^func insertComments/
+.code x4/form.go /^func parseRequest/
+.code x4/form.go /^func appendComment/
+.code x4/form.go /^func saveCommentsFile/
 
-	func loadCommentsFile() string {
-	}
-
-	func appendComment(text, row string) {
-	}
-
-	func saveCommentsFile(text string) {
-	}
-
-	func insertComments(article, comment string) string {
-	}
-	
-Also we copy a CGI handler and server from the previous articles
-
-	var local = flag.Bool("local", false, "start local server for debugging")
-	
-	func main() {
-		flag.Parse()
-	
-		if *local {
-			fmt.Println("=== starting server on http://localhost:8085/ ===")
-			http.HandleFunc("/", requestHandler)
-			log.Fatal(http.ListenAndServe(":8085", nil))
-			return
-		}
-		
-		err := cgi.Serve(http.HandlerFunc(commentsHandler))
-		if err != nil {
-			panic(err)
-		}
-	}
+Copy `main` function from [[x2][X2]].
 
 And copy header import section
 
@@ -117,52 +87,52 @@ And copy header import section
 		"net/http"
 		"net/http/cgi"
 		"log"
-		"flag"
+		"os"
 	)
 
 * Implementing internals
 
 parseRequest takes request and returns comment and author of the comment as a strings
-
-	func parseRequest(r *http.Request) (string, string) {
-		if err := r.ParseForm(); err != nil {
-			http.Error(w, "cannot parse form", 500)
-			return
-		}
-
-		author := r.Form["author"]
-		comment := r.Form["comment"]
-
-		return author, comment
-	}
+.code x4/form.go /^func parseRequest/,/^}/
 
 loadCommentsFile returns all saved comments text
+.code x4/form.go /^func loadCommentsFile/,/^}/
 
-	func loadCommentsFile() string {
-		text, err := ioutil.ReadAll()
-	}
+See documentation about [[https://golang.org/pkg/io/ioutil/#ReadFile][ioutil.ReadFile]].
 
 appendComment appends row to all text and returns all text as a string
+.code x4/form.go /^func appendComment/,/^}/
 
-	func appendComment(text, row string) {
-	}
+Function uses [[https://golang.org/pkg/html/#EscapeString][html.EscapeString]] so add
+`html` package to the `import` section.
 
-saveCommentsFile saves text to file
+loadArticleFile identical to loadCommentsFile
+.code x4/form.go /^func loadArticleFile/,/^}/
 
-	func saveCommentsFile(text string) {
-	}
+saveCommentsFile saves text to file. It uses [[https://golang.org/pkg/io/ioutil/#WriteFile][ioutil.WriteFile]]
+.code x4/form.go /^func saveCommentsFile/,/^}/
+
+`[]byte(text)` statement convert string to sequence of bytes.
+
+0666 -- permissions attributes of a file in octal format.
 
 insertComments inserts comments to the end of article and returns article as a string
+.code x4/form.go /^func insertComments/,/^}/
 
-	func insertComments(article, comment string) string {
-	}
+Add `strings` to `import` section.
 
+* Final steps
 
+Run
 
+	go run form.go
 
+Copy to the prod
 
+	GOOS=freebsd GOARCH=amd64 go build form.go
+	ocean -deploy form
 
-
+Check [[http://wet.voilokov.com/form][http://wet.voilokov.com/form]].
 
 
 

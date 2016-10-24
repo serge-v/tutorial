@@ -4,6 +4,16 @@ Tags: first
 
 Serge Voilokov
 
+* 
+
+Since our project is not complicated we just use
+
+	go run program.go
+
+That's all that we need at the moment.
+
+So stop here and go to Exercise 4.
+
 * Introduction
 
 In previous article we compiled a summary with the list of build/run/deploy commands.
