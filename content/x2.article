@@ -46,68 +46,44 @@ Run it
 
 	go run helloworld.go
 
-* Copy helloworld to production
+* Ocean tool
 
-Our local development computer runs Windows but cloud server runs on different hardware and OS.
-To recompile the program for running on cloud server run
+Deployment to the production is complicated. To simplify deployment steps I wrote
+[[https://github.com/serge-v/tutorial/blob/master/ocean.go][ocean.go]] tool.
+The tool does following things
 
-	GOOS=freebsd GOARCH=amd64 go build helloworld.go
+- Builds a program for the cloud server OS and architecture
+- Copies a program to the remote server to the web directory
+- Sets the permissions to execute
 
-Result of compilation will be `helloworld` file, not `helloworld.exe`. It will not run on Windows.
+You need to compile ocean tool.
 
-We have 3 options how to install helloworld to the server
+Copy the source from [[https://github.com/serge-v/tutorial/blob/master/ocean.go][ocean.go]].
+Put ocean-params.go file that I have sent to you by email to the same directory.
+ocean-params.go has all nessessary information to connect to cloud server i.e. hostname,
+username, certificate.
 
-- WinSCP
-- scp and ssh
-- ocean tool
+Run compiler
 
-** Copying using WinSCP
+	go build ocean.go ocean-params.go
 
-I sent to you private key for connecting to the cloud server.
-You need to convert the key into WinSCP key format using these
-[[http://stackoverflow.com/questions/3190667/convert-pem-to-ppk-file-format][instructions]].
+Now you aready to deploy your helloworld program
 
-In WinSCP do:
+	ocean -deploy helloworld
 
-- Create a new session
-- Put Host name, the Port number, User name, no password and converted PPK key
-- In Advanced section set logon shell to "sudo su -"
-- Copy helloworld to /usr/local/www/wet/ directory
-- Set executable perrmissions to the helloworld file
+Note that you need specify `helloworld`, not `helloworld.go`. Ocean tool will look for
+helloworld.go source automatically.
 
 Now check [[http://wet.voilokov.com/helloworld][http://wet.voilokov.com/helloworld]].
 Browser should show page with this text
 
 	hello world
 
-** Copying using scp
-
-To copy to the remote server run
-
-	scp helloworld wet.voilokov.com:
-
-Login to the wet.voilokov.com server and execute commands
-
-	sudo cp helloworld /usr/local/www/wet/helloworld
-	sudo chmod +x /usr/local/www/wet/helloworld
-
-** Copying using ocean tool
-
-I wrote [[https://github.com/serge-v/tutorial/blob/master/ocean.go][ocean]] tool to simplify deployment steps.
-It copies the program to the cloud server and does all nessessary configuration.
-You only need to run
-
-	ocean -deploy helloworld
-
 * Copy worldtime to production
 
 Change `main` function worldtime.go in the same way as you did in helloworld.go.
 
 Build
-
-	GOOS=freebsd GOARCH=amd64 go build worldtime.go
-
-To copy to server use WinSCP or just run
 
 	ocean -deploy worldtime
 
@@ -121,32 +97,16 @@ To develop and debug use the cycle
 
 	// edit your code
 
-	// build
+	// make a test run
 	go run worldtime.go
 
-	// check
 	// refresh browser on http://localhost:8085/
-	
-	// stop
 	// Ctrl+C to stop server
-
 	// repeat
 
 Deploy to the prod
 
-	// build for the FreeBSD
-	GOOS=freebsd GOARCH=amd64 go build worldtime.go
-
-	// deploy
 	ocean -deploy helloworld
-
-	// check
 	// refresh http://wet.voilokov.com/worldtime
-
-
-
-
-
-
 
 
