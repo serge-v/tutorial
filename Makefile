@@ -9,11 +9,11 @@ debug-server: debug-server.go
 ocean: ocean.go ocean-params.go
 	go build ocean.go ocean-params.go
 
-ocean.exe: ocean.go ocean-params.go
-	GOOS=windows GOARCH=amd64 go build ocean.go ocean-params.go
+#ocean.exe: ocean.go ocean-params.go
+#	GOOS=windows GOARCH=amd64 go build ocean.go ocean-params.go
 
-ocean.zip: ocean.exe
-	zip ocean.zip ocean.exe
+#ocean.zip: ocean.exe
+#	zip ocean.zip ocean.exe
 
 blog: blog.go
 	go build blog.go
