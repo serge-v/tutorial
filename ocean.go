@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"golang.org/x/crypto/ssh"
 	"log"
+	"io"
 	"flag"
 	"os"
 	"time"
 	"strings"
+	"compress/gzip"
 )
 
 var (
@@ -36,7 +38,7 @@ func main() {
 
 	signer, err := ssh.ParsePrivateKey([]byte(params.PrivateKey))
 	if err != nil {
-		log.Fatal("parse key failed: ", err)
+		panic(err)
 	}
 
 	config := &ssh.ClientConfig{
@@ -47,12 +49,12 @@ func main() {
 
 	client, err := ssh.Dial("tcp", params.Host, config)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	session, err := client.NewSession()
 	if err != nil {
-		log.Fatal("failed to create session: ", err)
+		panic(err)
 	}
 	defer session.Close()
 
@@ -65,10 +67,25 @@ func main() {
 		if err != nil {
 			log.Fatal("cannot open file: ", err)
 		}
-		session.Stdin = f
 		
+		pr, pw := io.Pipe()
+		gzwriter := gzip.NewWriter(pw)
+
+		go func() {
+			written, err := io.Copy(gzwriter, f)
+			if err != nil {
+				panic(err)
+			}
+			println(written, "bytes transmitted")
+			gzwriter.Close()
+			f.Close()
+			pw.Close()
+		}()
+
+		session.Stdin = pr
+
 		fmt.Printf("copying %s to the ocean\n", fname)
-		cmd := "cat > " + fname
+		cmd := "zcat > " + fname
 		if err := session.Run(cmd); err != nil {
 			log.Fatal("failed to run: ", err)
 		}
