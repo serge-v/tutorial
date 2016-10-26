@@ -1,5 +1,4 @@
-// Home page for wet.voilokov.com
-
+// wethome is a home page application for wet.voilokov.com.
 package main
 
 import (

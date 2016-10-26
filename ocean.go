@@ -1,3 +1,6 @@
+// ocean is a tool to deploy golang application to digitalocean cloud server.
+// It builds the app for freebsd-amd64 and copies to /usr/local/www/wet virtual directory.
+// Uses ocean-params.go file which contains credentials to connect to the ocean.
 package main
 
 import (
@@ -122,7 +125,7 @@ func deployProgram(fname string) {
 	commands := `
 		sudo cp {fname} /usr/local/www/wet/{fname};
 		sudo chmod +x /usr/local/www/wet/{fname};
-		ls -l /usr/local/www/wet/`
+		ls -l /usr/local/www/wet/{fname}`
 
 	cmd = strings.Replace(commands, "{fname}", fname, -1)
 
@@ -189,6 +192,7 @@ func main() {
 	}
 
 	client = createSshClient()
+	defer client.Close()
 
 	if *deploy != "" {
 		deployProgram(*deploy)

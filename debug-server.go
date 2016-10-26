@@ -1,4 +1,5 @@
-// debug-server OMIT
+// debug-server runs blog locally on http://localhost:8081.
+// Start it and edit articles.
 package main
 
 import (
@@ -26,4 +27,3 @@ func main() {
 		panic(err)
 	}
 }
-// debug-server OMIT

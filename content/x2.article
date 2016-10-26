@@ -67,7 +67,7 @@ Run compiler
 
 	go build ocean.go ocean-params.go
 
-Now you aready to deploy your helloworld program
+Now you are ready to deploy your helloworld program
 
 	ocean -deploy helloworld
 
@@ -83,7 +83,7 @@ Browser should show page with this text
 
 Change `main` function worldtime.go in the same way as you did in helloworld.go.
 
-Build
+Build and copy
 
 	ocean -deploy worldtime
 
