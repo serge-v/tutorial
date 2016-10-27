@@ -6,6 +6,7 @@ The goal is to teach her to
     - generate html using templates
     - process html forms
     - interact with mariadb
+    - create browser notifications in javascript
 
 blog program itself is a CGI handler for golang.org/x/tools/blog package.
 Locally it runs under debug-server. In production it runs under Apache web

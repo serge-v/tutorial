@@ -41,7 +41,7 @@ Run in terminal to build program
 
 Make test run
 
-	helloworld
+	./helloworld
 
 Click on this link  [[http://localhost:8085][http://localhost:8085]] to see "hello world"
 string on web page.
@@ -74,7 +74,7 @@ Run in terminal to build program
 
 Make test run
 
-	worldtime
+	./worldtime
 
 Click on this link  [[http://localhost:8085][http://localhost:8085]].
 You should see this program output

@@ -129,6 +129,6 @@ Run
 
 Copy to the prod
 
-	ocean -deploy form
+	./ocean -deploy form
 
 Check [[http://wet.voilokov.com/form][http://wet.voilokov.com/form]].

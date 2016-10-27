@@ -69,7 +69,7 @@ Run compiler
 
 Now you are ready to deploy your helloworld program
 
-	ocean -deploy helloworld
+	./ocean -deploy helloworld
 
 Note that you need specify `helloworld`, not `helloworld.go`. Ocean tool will look for
 helloworld.go source automatically.
@@ -85,7 +85,7 @@ Change `main` function worldtime.go in the same way as you did in helloworld.go.
 
 Build and copy
 
-	ocean -deploy worldtime
+	./ocean -deploy worldtime
 
 Check [[http://wet.voilokov.com/worldtime][http://wet.voilokov.com/worldtime]]
 

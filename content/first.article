@@ -25,6 +25,4 @@ or if web is unavailable run
 
 Push to git, then run
 
-	./deploy.sh
-
-
+	make deploy_blog
