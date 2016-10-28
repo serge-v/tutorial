@@ -7,7 +7,7 @@ Serge Voilokov
 * Introduction
 
 In this excercise we will work with Mysql database.
-Our program plan is
+We will learn how to
 
 - read file with username and password
 - connect to Mysql server
@@ -15,7 +15,9 @@ Our program plan is
 - select test database
 - create users table
 - insert new users into users table
-- list last 10 users from the users table
+- get last 10 users from the users table
+- print user list
+- if user count more than 10 delete last 2 users
 - close the connection
 
 * Prerequsites
@@ -25,19 +27,165 @@ Run command to download
 
 	go get github.com/go-sql-driver/mysql
 
-Useful command to check package documentation
-
-	go doc mysql
-
 * Start golang file
 
 Create a file named mysqltest.go. Put import statements
 .code x6/mysqltest.go /^package main/,/\)/
 
+Declare global database variable
+
+.code x6/mysqltest.go /^var db/
+
+Also lets declare constant for credentials file name since we are using it several times
+.code x6/mysqltest.go /^const password_file/
+
 * Convert plan into implementation
 
-Lets create a file named mysqltest.go and rewrite out plan into golang text
+Rewrite out plan from introduction into golang text
 .code x6/mysqltest.go /^func main/,/}/
+
+* Read credentials file
+
+I sent a file with username and password to you. Save it as mysql~.txt in the current directory.
+Copy these next functions into mysqltest.go file. Read my comments in the code what each line does.
+
+.code x6/mysqltest.go /^\/\/ readCredentials/,/^}/
 	
-* Connecting to database server
-.code x6/mysqltest.go /^func connectServer/,/}/
+* Connecting to the database server
+
+.code x6/mysqltest.go /^\/\/ connectServer/,/^}/
+
+* Create a test database
+
+This is simple. It just executes SQL statement for creating a database. I put "if not exists"
+so it will not return error is database is already exists.
+.code x6/mysqltest.go /^func createTestDatabase/,/^}/
+
+* Select a test database
+
+Fresh Mysql server contains only mysql and information_scheme databases.
+By default we connected to mysql database. To switch to our test
+database we need to execute `use` statement.
+.code x6/mysqltest.go /^func selectTestDatabase/,/^}/
+
+* Create a table
+
+The same. It just executes SQL. Look at `sql` variable. This is a multi-line string in Go.
+It contains familiar create table statement.
+.code x6/mysqltest.go /^func createUsersTable/,/^}/
+
+** Note about Go variables
+
+	sql := "something"
+
+":=" means we declare and then assign a value to variable
+
+	sql = "something"
+
+"=" means we just assign. If no such variable was declared previously compiler gives an error.
+
+If you want just declare a variable without assigning the value you use
+
+	var sql string
+
+
+* Insert rows into table
+
+In this function we prepare a statement stmt first.
+Question marks in `values(?, ?)` are a placeholders for parameters.
+Then we call it several times with different
+parameters.
+
+.code x6/mysqltest.go /^func insertNewUsers/,/^}/
+
+* Get users
+
+We want to read 10 users from database.
+
+Define structure
+
+.code x6/mysqltest.go /^type user struct/,/^}/
+
+And function should return
+
+	list []user
+	
+This is slice of structures. Slice is the Go type which acts as an array but resizable.
+
+getUsers function
+
+.code x6/mysqltest.go /^func getUsers/,/^}/
+
+* Print users
+
+.code x6/mysqltest.go /^func printUsers/,/^}/
+
+The most complicated row is
+
+	fmt.Printf("%4d %6d %20s   %-30s\n", idx+1, u.user_id, u.start_date, u.username)
+
+What the hell does it mean? It is format string specifiers
+
+	%4d   -- print idx+1 as string of length 4:   "   1"
+	%6d   -- print u.user_id as string of length 6: "     1"
+	%20s  -- print u.start_date as string with length 20 aligned right
+	%-30s -- print u.username as string with length 30 aligned left
+
+* Delete users
+
+Iterate over all users with index equal or greater than 10 and delete then from the table
+
+.code x6/mysqltest.go /^func deleteExtraUsers/,/^}/
+
+* Make a test run
+
+	go run mysqltest.go
+
+* What else?
+
+Not related to database operations but maybe you need to write the user list to the file.
+We can create a file with os.Create function. If you don't remember function parameters use
+
+	go doc os.Create
+
+It will dump the help
+
+	func Create(name string) (*File, error)
+	    Create creates the named file with mode 0666 (before umask), truncating it
+	    if it already exists. If successful, methods on the returned File can be
+	    used for I/O; the associated file descriptor has mode O_RDWR. If there is an
+	    error, it will be of type *PathError.
+
+So create a file and Fprintf to it
+
+.code x6/mysqltest.go /^func saveUsers/,/^}/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
