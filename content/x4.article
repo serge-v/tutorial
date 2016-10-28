@@ -63,7 +63,8 @@ detailed plan
 * Create program skeleton
 
 Lets convert our human readable plan to the Go language.
-It is mostly line to line conversion from the plan
+It is mostly line to line conversion from the plan.
+Create a file named `form.go`
 
 .code x4/form.go /^func requestHandler/,/^}/
 
@@ -130,5 +131,19 @@ Run
 Copy to the prod
 
 	./ocean -deploy form
+
+Program will not work yet because it needs article.html. You need to copy it to the prod too.
+
+Get new ocean tool
+
+	wget https://raw.githubusercontent.com/serge-v/tutorial/master/ocean.go
+
+Build
+
+	go build ocean.go ocean-params.go
+
+Now deploy article.html
+
+	./ocean -deploy article.html
 
 Check [[http://wet.voilokov.com/form][http://wet.voilokov.com/form]].

@@ -1,0 +1,43 @@
+X6. working with Mysql
+27 Oct 2016
+Tags: first
+
+Serge Voilokov
+
+* Introduction
+
+In this excercise we will work with Mysql database.
+Our program plan is
+
+- read file with username and password
+- connect to Mysql server
+- create test database
+- select test database
+- create users table
+- insert new users into users table
+- list last 10 users from the users table
+- close the connection
+
+* Prerequsites
+
+You need [[https://github.com/go-sql-driver/mysql#usage][mysql client package]].
+Run command to download
+
+	go get github.com/go-sql-driver/mysql
+
+Useful command to check package documentation
+
+	go doc mysql
+
+* Start golang file
+
+Create a file named mysqltest.go. Put import statements
+.code x6/mysqltest.go /^package main/,/\)/
+
+* Convert plan into implementation
+
+Lets create a file named mysqltest.go and rewrite out plan into golang text
+.code x6/mysqltest.go /^func main/,/}/
+	
+* Connecting to database server
+.code x6/mysqltest.go /^func connectServer/,/}/

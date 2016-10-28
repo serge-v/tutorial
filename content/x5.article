@@ -44,3 +44,19 @@ So what are advantages of using packages?
 Disadvantages?
 
 - Many programs depend on our package so we should carefully modify it because we can break all programs in one shot.
+
+* External packages
+
+There are many external packages for Golang. For working with Mysql run this command
+
+	go get github.com/go-sql-driver/mysql
+	
+It will download mysql package which contains Mysql golang client. Import into a program using 
+
+	import (
+		"database/sql"
+		_ "github.com/go-sql-driver/mysql"
+	)
+	
+We will work with Mysql in our [[x6][X6]] excercise.
+
