@@ -81,7 +81,7 @@ func buildProgram(name string) {
 	fmt.Println("building done")
 }
 
-func deployProgram(fname string) {
+func deployProgram(fname string, executable bool) {
 	session := createSession()
 
 	// this function does the same as the following commands
@@ -122,10 +122,11 @@ func deployProgram(fname string) {
 	defer session.Close()
 
 	// run tuning commands
-	commands := `
-		sudo cp {fname} /usr/local/www/wet/{fname};
-		sudo chmod +x /usr/local/www/wet/{fname};
-		ls -l /usr/local/www/wet/{fname}`
+	commands := "sudo cp {fname} /usr/local/www/wet/{fname};"
+	if executable {
+		commands += "sudo chmod +x /usr/local/www/wet/{fname};"
+	}
+	commands += "ls -l /usr/local/www/wet/{fname}"
 
 	cmd = strings.Replace(commands, "{fname}", fname, -1)
 
@@ -187,15 +188,18 @@ func main() {
 		return
 	}
  
-	if *deploy != "" {
-		buildProgram(*deploy)
+ 	fname := *deploy
+ 	executable := !strings.HasSuffix(fname, ".html")
+ 
+	if len(fname) > 0 && executable {
+		buildProgram(fname)
 	}
 
 	client = createSshClient()
 	defer client.Close()
 
 	if *deploy != "" {
-		deployProgram(*deploy)
+		deployProgram(fname, executable)
 	} else if *status {
 		getStatus()
 	} else if *tty {
