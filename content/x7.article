@@ -1,10 +1,144 @@
-X7. Creating simple web chat
-28 Oct 2016
-Tags: first
+X7. Starting chat project
+1 Nov 2016
+Tags: chat
 
 Serge Voilokov
 
 * Introduction
 
-We will create a simple webchat so we can communicate.
+Lets do something real. We need a chat application. Something like this
+
+.html x7/chatmock.html
+
+* Spec
+
+Lets write a spec(ification). Specification is a list and description of features and requirements
+that our program should have.
+
+Technical details
+
+- Runs on wet.voilokov.com since I already have it.
+- Web UI uses websockets to communicate to the server because it provides immediate delivery and full duplex communication.
+- Minimal web UI, i.e. html generates on server mostly because we hate to write browser javascript code.
+
+First priority features
+
+- As I said before it will be web UI accessible from everywhere.
+- Only one chat room.
+- Browser notification when message arrives.
+- Primitive authentification by token.
+- Log chat to file.
+- On connect client receives recent chat history.
+
+Second priority features
+
+- Encryption
+- Console client because I like black terminals
+
+* Description of architecture
+
+There is a one chat server and many UI clients. Chat server is written in Go.
+
+Server acts as web server and provides index page to the clients with chat UI.
+Also it runs websocket server so clients can send and receive messages in single chat
+room using chat UI. Server maintains a websocket connections to all clients.
+
+Client is a web browser which loads UI from server and
+connects to the server using javascript websocket API.
+It listens on websocket for a broadcast messages. When message arrives it adds the message
+to the chat list. Also client can has an ability to send message to the server which will be broadcasted 
+among all clients including itself.
+
+Upon connection server sends to the client hello message and client should respond with username.
+This name will be used as a nickname in the chat.
+
+* Get the project from github
+
+We need to keep history of the changes so we need a source control for this project.
+I created a project on github [[https://github.com/serge-v/chat.git][https://github.com/serge-v/chat.git]]
+and added you to the collaborators.
+
+Go to home directory and clone the repository locally
+
+	cd ~
+	git clone https://github.com/serge-v/chat.git
+
+It will create a `chat` directory locally
+
+	chat
+	  |--server.go
+	  |--chat-design.html
+	  `--files
+	       `--index.html
+
+* Design main page
+
+I created basic UI design in chat-design.html. Open it in the browser.
+Click 'Add message' button several times. Messages are appending at the bottom of the list
+and go out of the screen.
+
+Actually we need a scrollable list here. Your goal is to make such list for a messages.
+Last message should appear at the bottom and all list should scroll top.
+
+So you need to change `<div id="msglog">` or create another `<div>` container over it
+so it will have fixed size and it should scroll when addMessage is called. And scrollbar
+should appear when size of messages exceed container size.
+
+chat-design.html contains only design of UI web page. It will not run on server. It is just
+for designing UI locally.
+
+So when scrollable list works merge your changes to files/index.html.
+
+* Build server
+
+Take websocket package
+
+	go get golang.org/x/net/websocket
+
+Run server
+
+	go run server.go
+
+* How to test it
+
+Open [[http://localhost:8085][http://localhost:8085]]. Click one 'Connect as ' button first,
+then click 'Hi' and 'Hello' buttons to send message into the chat.
+
+Open [[http://localhost:8085][http://localhost:8085]] in the second browser window.
+Connect as another user. Click 'Hi'.
+
+* Add a ability send messages
+
+Add text input box and button `Send` elements to the page. 
+
+Add javascript function on `Send` button click to send text from input box to the chat.
+Input box should clear when message is sent.
+
+* Saving chat history on server
+
+It will be in the [[x8][next]] article.
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

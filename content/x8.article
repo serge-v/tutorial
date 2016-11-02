@@ -1,0 +1,31 @@
+X8. Chat project. 2.
+2 Nov 2016
+Tags: chat
+
+Serge Voilokov
+
+* Saving chat history on server
+
+When message arrivef from the client server should append it to the log file.
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
