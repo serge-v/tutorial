@@ -56,7 +56,7 @@ This name will be used as a nickname in the chat.
 
 We need to keep history of the changes so we need a source control for this project.
 I created a project on github [[https://github.com/serge-v/chat.git][https://github.com/serge-v/chat.git]]
-and added you to the collaborators.
+and added you to the collaborators. It has a primitive chat web UI and chat server.
 
 Go to home directory and clone the repository locally
 
