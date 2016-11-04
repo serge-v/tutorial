@@ -1,18 +1,60 @@
-X8. Chat project. 2.
+X8. Chat server
 2 Nov 2016
 Tags: chat
 
 Serge Voilokov
 
-* Saving chat history on server
+* Server architecture
 
-When message arrivef from the client server should append it to the log file.
+Main function
+
+- init
+- start worker go routine
+- start websocket server on ws://localhost:8085/ws
+- start web server on http://localhost:8085
+
+Init
+
+- generate index.html file with valid websocket url
+- create client list
+- create connectChan, disconnectChan, broadcastChan channels
+
+Channels will be used for communicating between websocket, clients and worker go routines.
+
+Web server
+
+- serves UI index.html page to the clients
+
+Websocket server
+
+- internally it starts go routine which listen for connections
+- on connection it calls our onWebsocketConnection function
+- onWebsocketConnection creates a client, sends client to the connectedChan ans starts client routine
+
+Worker go routine
+
+- listen on broadcast channel for a message
+- listen on connectChan channel for a new client
+- listen on disconnectChan channel for client disconnect
+
+- when client is connected add client to the client list; and
+- notify all clients.
+- when client is disconnected remove the client from the list; and
+- notify all clients.
+- when message arrives save it to the file; and
+- resend the message to all clients.
+
+Client go routine
+
+- wait for a message
+- when message received send it to broadcast channel
+- on disconnect send message to client_disconnected channel
+
+* Add features
 
 
 
 
-
-	
 
 
 

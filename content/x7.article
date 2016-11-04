@@ -89,13 +89,13 @@ for designing UI locally.
 
 So when scrollable list works merge your changes to files/index.html.
 
-* Build server
+* Run server
 
 Take websocket package
 
 	go get golang.org/x/net/websocket
 
-Run server
+Run
 
 	go run server.go
 
@@ -107,14 +107,29 @@ then click 'Hi' and 'Hello' buttons to send message into the chat.
 Open [[http://localhost:8085][http://localhost:8085]] in the second browser window.
 Connect as another user. Click 'Hi'.
 
-* Add a ability send messages
+* Add a ability to send messages
 
 Add text input box and button `Send` elements to the page. 
 
 Add javascript function on `Send` button click to send text from input box to the chat.
 Input box should clear when message is sent.
 
-* Saving chat history on server
+* Push changes to github
+
+Review your changes
+
+	git difftool
+
+Commit your changes
+
+	git add -u
+	git commit -m 'Add scrolling'
+
+Push changes to github
+
+	git push
+
+* Adding features to chat server
 
 It will be in the [[x8][next]] article.
 
