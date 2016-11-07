@@ -7,12 +7,10 @@ import (
 	"bufio"
 	"fmt"
 	"golang.org/x/crypto/ssh"
-	"io"
 	"flag"
 	"os"
 	"time"
 	"strings"
-	"compress/gzip"
 	"os/exec"
 )
 
@@ -64,55 +62,22 @@ func createSession() *ssh.Session {
 	return session
 }
 
-func buildProgram(name string) {
-	fmt.Println("building", name, "for the ocean")
-	cmd := exec.Command("go", "build", name+".go")
-	
-	env := os.Environ()
-	env = append(env, "GOOS=freebsd")
-	env = append(env, "GOARCH=amd64")
-	cmd.Env = env
-
-	out, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Println("errors:[\n", string(out), "]")
-		panic(err)
-	}
-	fmt.Println("building done")
-}
-
-func deployProgram(fname string, executable bool) {
+func deployFile(fname string) {
 	session := createSession()
 
 	// this function does the same as the following commands
-	// cat file | gzip | ssh host 'zcat > file'
+	// cat file | ssh host 'cat > file'
 
-	// create gzip stream
 	f, err := os.Open(fname)
 	if err != nil {
 		panic(err)
 	}
 
-	pr, pw := io.Pipe()
-	gzwriter := gzip.NewWriter(pw)
-
-	// copy to gzip
-	go func() {
-		written, err := io.Copy(gzwriter, f)
-		if err != nil {
-			panic(err)
-		}
-		println(written, "bytes transmitted")
-		gzwriter.Close()
-		f.Close()
-		pw.Close()
-	}()
-
-	// connect ssh session input to the gzip output
-	session.Stdin = pr
+	// connect ssh session input to the opened file
+	session.Stdin = f
 
 	fmt.Printf("copying %s to the ocean\n", fname)
-	cmd := "zcat > " + fname
+	cmd := "cat > " + fname
 	if err := session.Run(cmd); err != nil {
 		panic(err)
 	}
@@ -121,16 +86,9 @@ func deployProgram(fname string, executable bool) {
 	session = createSession()
 	defer session.Close()
 
-	// run tuning commands
-	commands := "sudo cp {fname} /usr/local/www/wet/{fname};"
-	if executable {
-		commands += "sudo chmod +x /usr/local/www/wet/{fname};"
-	}
-	commands += "ls -l /usr/local/www/wet/{fname}"
-
-	cmd = strings.Replace(commands, "{fname}", fname, -1)
-
+	// run remote deploy commands
 	fmt.Println("deploying " + fname)
+	cmd = "sudo tar -C / -xzf " + fname + "; sudo /usr/local/lib/" + fname + "-configure.sh"
 	if err := session.Run(cmd); err != nil {
 		panic(err)
 	}
@@ -181,6 +139,44 @@ func getStatus() {
 	}
 }
 
+func execInstallRules(fname string) {
+	f, err := os.Open(fname)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		s := scanner.Text()
+		if strings.HasPrefix(s, "// ocean-build ") {
+			pars := strings.SplitN(s, " ", 3)
+			if len(pars) != 3 {
+				panic("invalid ocean-build command " + s)
+			}
+
+			cmd := exec.Command(pars[2])
+			out, err := cmd.CombinedOutput()
+			if err != nil {
+				fmt.Println("errors:[\n", string(out), "]")
+				panic(err)
+			}
+			fmt.Println(string(out))
+		} else if strings.HasPrefix(s, "// ocean-deploy ") {
+			pars := strings.SplitN(s, " ", 3)
+			if len(pars) != 3 {
+				panic("invalid ocean-build command " + s)
+			}
+			deployFile(pars[2])
+			fmt.Println("deployment done")
+			break
+		}
+	}
+
+	if err = scanner.Err(); err != nil {
+		panic(err)
+	}
+}
+
 func main() {
 	flag.Parse()
 	if flag.NFlag() == 0 {
@@ -188,18 +184,11 @@ func main() {
 		return
 	}
  
- 	fname := *deploy
- 	executable := !strings.HasSuffix(fname, ".html")
- 
-	if len(fname) > 0 && executable {
-		buildProgram(fname)
-	}
-
 	client = createSshClient()
 	defer client.Close()
 
 	if *deploy != "" {
-		deployProgram(fname, executable)
+		execInstallRules(*deploy)
 	} else if *status {
 		getStatus()
 	} else if *tty {
