@@ -19,25 +19,78 @@ func ConnectServer(dbname string) {
 	}
 }
 
-func CreateTables() {
-	users := `create table if not exists users (
+const sql_version = `
+create table if not exists version(
+	revnum int, comment text, primary key(revnum)
+);`
+
+const sql_users = `
+create table if not exists users (
 	id integer,
-        start_date datetime default null,
-        username varchar(45) default null,
-        PRIMARY KEY (id)
-     );`
+	start_date datetime default null,
+	username varchar(45) default null,
+	PRIMARY KEY (id)
+);`
 
-	registrations := `create table if not exists registrations(test text);`
+const sql_registrations = `
+create table if not exists registrations(
+	test text
+);`
 
-	sqls := []string{users, registrations}
+var create_statements = []string{
+	sql_version,
+	sql_users,
+	sql_registrations,
+}
 
-	for idx, sql := range sqls {
+func CreateTables() {
+	for idx, sql := range create_statements {
 		_, err := db.Exec(sql)
 		if err != nil {
 			panic(err)
 		}
 		fmt.Println("table created:", idx)
 	}
+}
+
+func UpdateVersion(revision_number int, comment string) error {
+	sql := "insert into version(revnum, comment) values (?, ?);"
+	stmt, err := db.Prepare(sql)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(revision_number, comment)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func GetVersion() (int, error) {
+	sql := "select max(revnum) from version;"
+	stmt, err := db.Prepare(sql)
+	if err != nil {
+		return 0, err
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.Query()
+	if err != nil {
+		return 0, err
+	}
+
+	if !rows.Next() {
+		return 0, errors.New("no results")
+	}
+	
+	var version int
+	err = rows.Scan(&version)
+	if err != nil {
+		return 0, err
+	}
+
+	return version, nil	
 }
 
 func generateRandomString(length int) string {

@@ -10,6 +10,16 @@ func TestCreateDatabase(t *testing.T) {
 	dbname := time.Now().Format("chat-20060102150405.db")
 	ConnectServer(dbname)
 	CreateTables()
+	err := UpdateVersion(1, "just created")
+
+	version, err := GetVersion()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if version != 1 {
+		t.Fatal("version is not 1")
+	}
 }
 
 var reg_id int           // registration id

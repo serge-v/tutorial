@@ -74,11 +74,20 @@ Use [[/blog/x6][X6]] as an example.
 The same as in X6 except different `Open` parameters.
 .code x9/db/db.go /^func ConnectServer/,/^}/
 
-** Tables creation function
+** Tables creation
+Tables statements
+.code x9/db/db.go /^const sql_version/,/^}/
+
+Tables creation
 .code x9/db/db.go /^func CreateTables/,/^}/
 
-** Functions for user registration
+** Version table
+Copy these functions and use as an example for registrations and users tables.
+.code x9/db/db.go /^func UpdateVersion/,/^}/
+.code x9/db/db.go /^func GetVersion/,/^}/
 
+
+** Functions for user registration
 AddRegistration creates a record in registrations table. Record contains
 id, timestamp, user name, email and randomly generated string (farsh).
 .code x9/db/db.go /^func AddRegistration/,/^}/
