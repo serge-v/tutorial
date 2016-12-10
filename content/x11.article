@@ -1,0 +1,60 @@
+X11. Chat search
+28 Nov 2016
+Tags: chat
+
+Serge Voilokov
+
+* Introducton
+
+We need to provide some search functionality so we can search thru the messages.
+
+* Database
+
+Open `src/chat/db/db.go` file and add code for messages table.
+
+	const sql_messages = `
+	create table if not exists messages(
+		id integer primary key,
+		ts datetime default null,
+		username varchar(45)
+	);
+
+	create virtual table if not exists messages_text using fts5(
+		body,
+		content=messages,
+		content_rowid=id
+	);`
+
+It should create 2 tables. One for structure information and one for fulltext search
+by message body.
+
+Add db functions
+
+	func AddMessage(ts time.Time, username, text string) {
+		// should do:
+		// 1. insert into messages(ts, username)
+		// 2. insert into messages_text(ts, username)
+	}
+
+	// SELECT highlight(email, 2, '<b>', '</b>') FROM messages WHERE BODY MATCH 'fts5'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

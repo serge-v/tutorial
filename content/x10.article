@@ -6,29 +6,37 @@ Serge Voilokov
 
 * Getting the code
 
-First time (see [[/blog/x7][X7]] article) you cloned the chat project using
+First time (see [[/blog/x7-starting-chat][X7. Starting chat]] article) you cloned the chat project using
 
 	git clone https://github.com/serge-v/chat.git
 
 This command created ~/chat directory.
 
-After cloning you just need `git pull` command to get the changes
+After cloning you just need `git pull` command to get the updates
 
 	cd ~/chat
 	git pull
 
 * Sending the changes to the chat
 
-You will send changes to our chat as an attachment. I will review it and apply to the master branch on
-[[https://github.com/serge-v/chat.git][https://github.com/serge-v/chat.git]].
+We will use our chat for source code synchronization.
+
+The process will be following
+
+- You send changes to our chat as an attachment.
+- I review them and apply to the master branch on github.
+- You do "get pull" for an update.
 
 Do an excercise. Make a small change in readme.txt.
 
 Mark changes for sending
 
 	git add -A
+	git status
 
-Send changes
+You should see some green files. It means they are marked for commit and sending.
+
+Send changes (Replace "My new changes" with actual description what you did)
 
 	./send-changes "My new changes"
 
