@@ -24,15 +24,13 @@ Create a script that will set `GOPATH` environment variable
 
 	echo export GOPATH=~/go > setgo.sh
 
-Also add a path to binaries setup script
+Also add a path to binaries to setup script
 
 	echo export PATH=~/go/bin:${PATH} >> setgo.sh
 
 Set executable permissions for the script
 
 	chmod +x setgo.sh
-
-Create script to set GOPATH variable
 
 Execute in the current shell
 
