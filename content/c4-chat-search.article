@@ -1,4 +1,4 @@
-X11. Chat search
+C4. Chat search
 28 Nov 2016
 Tags: chat
 
@@ -37,24 +37,3 @@ Add db functions
 	}
 
 	// SELECT highlight(email, 2, '<b>', '</b>') FROM messages WHERE BODY MATCH 'fts5'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

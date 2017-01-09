@@ -1,4 +1,4 @@
-X9. Chat database
+C3. Chat database
 18 Nov 2016
 Tags: chat
 
@@ -15,7 +15,7 @@ You will replace file operations with database operations.
 - chat server provides `login.html` page on https://localhost:8085.
 - new user goes to `login.html` page and enters registration info.
 - login.html page calls `/register` handler.
-- `/register` handler emails user info and a random confirmation link to adminintrator (me). And saves random string to the registration file.
+- `/register` handler emails user info and a random confirmation link to administrator (me). And saves random string to the registration file.
 - I manually verify user info and forward it to the new user.
 - User click link from email.
 - Link calls `/create` handler.
@@ -28,7 +28,7 @@ You will replace file operations with database operations.
 - chat server provides `login.html` page on https://localhost:8085.
 - new user goes to `login.html` page and enters user and password.
 - login.html page calls `/auth` handler.
-- `/auth` handler reads a pasword from user's file and if passwords match generates a session token.
+- `/auth` handler reads a password from user's file and if passwords match generates a session token.
 - `/auth` handler responds to the user with Token session cookie and redirects to the `index.html` page.
 - `index.html` checks session cookie and enters the user to chat.
 
@@ -47,7 +47,7 @@ So later it is easy to switch to MySQL. Sql statements will remain the same.
 - `registrations` table. Contains id, timestamp, name, email, random, created fields.
 - `users` table. Id, creation date, name, password, email, session token. Probably user settings like `enable_notifications`, `colors`, `last_message_time` etc but I am not sure. Also this table will be used to search users.
 - `channels` table. There is no channels for now. All chat is in one window. So we need to separate conversations somehow.
-- `messages` table. All sent messages should be kept as a history. We need to provice search by time range, user name, channel name and text.
+- `messages` table. All sent messages should be kept as a history. We need to provide search by time range, user name, channel name and text.
 - `version` table. Contains version number. For future upgrades it is useful to know current database schema version.
 
 * Database package
@@ -64,13 +64,13 @@ Create db.go file
 
 Open `db.go` and put this content
 .code x9/db/db.go /^package db$/,/^var db/
-	
+
 * DB operations
 
 Use [[/blog/x6][X6]] as an example.
 
 ** Connect function
-	
+
 The same as in X6 except different `Open` parameters.
 .code x9/db/db.go /^func ConnectServer/,/^}/
 
@@ -91,7 +91,7 @@ Copy these functions and use as an example for registrations and users tables.
 AddRegistration creates a record in registrations table. Record contains
 id, timestamp, user name, email and randomly generated string (farsh).
 .code x9/db/db.go /^func AddRegistration/,/^}/
-	
+
 FindPendingRegistration searches for peding registration.
 .code x9/db/db.go /^func FindPendingRegistration/,/^}/
 
@@ -120,7 +120,7 @@ Go language has a builtin mechanism for writing unit tests.
 
 Create a file `src/chat/db/db_test.go`
 .code x9/db/db_test.go /^package/,/^var username/
-	
+
 Put TestRegistration function. This function simulates "User registration process".
 
 .code x9/db/db_test.go /TestRegistration/,/^}/
@@ -155,37 +155,9 @@ and implement functions
 	LoginUser
 	AuthUser
 
-Fix the finctions and rerun
+Fix the functions and rerun
 
 	go test
 
 until it will display PASS message. When both tests pass the database functions are
 ready to replace file operations.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

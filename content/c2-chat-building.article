@@ -1,0 +1,40 @@
+C2. Building chat project
+10 Nov 2016
+Tags: chat
+
+Serge Voilokov
+
+* Setup Go language environment
+
+Start terminal. Create `go` directory
+
+	cd ~
+	mkdir go
+
+Set `GOPATH` environment variable
+
+	export GOPATH=~/go
+
+Set PATH variable
+
+	export PATH=~/go/bin:${PATH}
+
+Get chat project
+
+	go get github.com/milla-v/chat/...
+
+After running this command `~/go/bin` directory will contain built executables.
+
+* How to debug
+
+Start server
+
+	chatd
+
+Create a test user
+
+- Open login page in browser [[https://localhost:8085][https://localhost:8085]]
+- Enter any user name and any email to the Registration section. Click 'Register'.
+- Copy https://localhost:8085/create?user=... link from terminal and open it in browser. New user will be created.
+- Copy https://localhost:8085/auth?user=... link from terminal and open it in the browser. New user will login to the chat.
+- New user profile will be created in `~/go/work` directory.

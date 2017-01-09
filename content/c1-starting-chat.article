@@ -1,8 +1,36 @@
-X8. Chat server
-2 Nov 2016
+C1. Starting chat project
+1 Nov 2016
 Tags: chat
 
 Serge Voilokov
+
+* Introduction
+
+Lets do something real. We need a chat application. Something like this
+
+.html x7/chatmock.html
+
+* Spec
+
+Lets write a spec. Specification is a list and description of features and requirements
+that our program should have.
+
+Technical details
+
+- Runs on wet.voilokov.com since I already have it.
+- Web UI uses websockets to communicate to the server because it provides immediate delivery and full duplex communication.
+- Minimal web UI, i.e. html generates on server mostly because we hate to write browser javascript code.
+
+Features
+
+- As I said before it will be web UI accessible from everywhere.
+- Only one chat room.
+- Browser notification when message arrives.
+- Primitive authentication by token.
+- Log chat to file.
+- On connect client receives recent chat history.
+- Encryption.
+- Console client because I like black terminals.
 
 * Server architecture
 
@@ -49,25 +77,3 @@ Client go routine
 - wait for a message
 - when message received send it to broadcast channel
 - on disconnect send message to client_disconnected channel
-
-* Add features
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
