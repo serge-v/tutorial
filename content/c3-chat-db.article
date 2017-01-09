@@ -56,13 +56,14 @@ Lets put all database operations to the separate package called `chat/db`.
 
 Create a db package for db operations
 
-	mkdir src/chat/db
+	cd ~/go/src/github.com/milla-v/chat
+	mkdir db
 
 Create db.go file
 
-	touch src/chat/db/db.go
+	touch db/db.go
 
-Open `db.go` and put this content
+Open `~/go/src/github.com/milla-v/chat/db/db.go` file and put this content
 .code x9/db/db.go /^package db$/,/^var db/
 
 * DB operations
@@ -76,7 +77,7 @@ The same as in X6 except different `Open` parameters.
 
 ** Tables creation
 Tables statements
-.code x9/db/db.go /^const sql_version/,/^}/
+.code x9/db/db.go /^const sqlVersion/,/^}/
 
 Tables creation
 .code x9/db/db.go /^func CreateTables/,/^}/

@@ -1,9 +1,9 @@
 package db
 
 import (
+	"fmt"
 	"testing"
 	"time"
-	"fmt"
 )
 
 func TestCreateDatabase(t *testing.T) {
@@ -11,8 +11,11 @@ func TestCreateDatabase(t *testing.T) {
 	ConnectServer(dbname)
 	CreateTables()
 	err := UpdateVersion(1, "just created")
+	if err != nil {
+		t.Fatal(err)
+	}
 
-	version, err := GetVersion()
+	version, err = GetVersion()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -22,11 +25,11 @@ func TestCreateDatabase(t *testing.T) {
 	}
 }
 
-var reg_id int           // registration id
-var user_id int          // user id
-var farsh string         // randomly generated registration farsh
-var password string      // randomly generated password
-var session_token string // randomly generated session token
+var regID int           // registration id
+var userID int          // user id
+var farsh string        // randomly generated registration farsh
+var password string     // randomly generated password
+var sessionToken string // randomly generated session token
 
 var username = "user1"
 
@@ -37,25 +40,25 @@ func TestRegistration(t *testing.T) {
 
 	email := "user1@ttt.com"
 
-	reg_id, farsh, err = AddRegistration(username, email)
-	if err != nil {
-		t.Fatal(err)
-	}
-	
-	fmt.Println("Server sends email with id: ", reg_id, ", farsh: ", farsh)
-	fmt.Println("User clicks confirmation link.")
-	
-	err = FindPendingRegistration(reg_id, farsh)
-	if err != nil {
-		t.Fatal(err)
-	}
-	
-	user_id, password, err = CompleteRegistration(reg_id)
+	regID, farsh, err = AddRegistration(username, email)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	fmt.Println("user created: ", user_id)
+	fmt.Println("Server sends email with id: ", regID, ", farsh: ", farsh)
+	fmt.Println("User clicks confirmation link.")
+
+	err = FindPendingRegistration(regID, farsh)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	userID, password, err = CompleteRegistration(regID)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println("user created: ", userID)
 }
 
 func TestLogin(t *testing.T) {
@@ -63,14 +66,14 @@ func TestLogin(t *testing.T) {
 
 	fmt.Println("User clicks Login button.")
 
-	user_id, session_token, err = LoginUser(username, password)
+	userID, sessionToken, err = LoginUser(username, password)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	fmt.Println("Server redirects to chat page.")
-	
-	name, err := AuthUser(user_id, session_token)
+
+	name, err := AuthUser(userID, sessionToken)
 	if err != nil {
 		t.Fatal(err)
 	}

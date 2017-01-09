@@ -1,16 +1,18 @@
 package db
 
 import (
-	"database/sql"                  // generic go database package
+	"crypto/rand"     // for random generation
+	"database/sql"    // generic go database package
+	"encoding/base64" // for random generation
+	"errors"          // for creating return errors
+	"fmt"             // for formatted printing
+
 	_ "github.com/mattn/go-sqlite3" // driver for sqlite
-	"errors"                        // for creating return errors
-	"fmt"                           // for formatted printing
-	"crypto/rand"                   // for random generation
-	"encoding/base64"               // for random generation
 )
 
 var db *sql.DB
 
+// ConnectServer creates a connection.
 func ConnectServer(dbname string) {
 	var err error
 	db, err = sql.Open("sqlite3", dbname) // different open parameters
@@ -19,12 +21,12 @@ func ConnectServer(dbname string) {
 	}
 }
 
-const sql_version = `
+const sqlVersion = `
 create table if not exists version(
 	revnum int, comment text, primary key(revnum)
 );`
 
-const sql_users = `
+const sqlUsers = `
 create table if not exists users (
 	id integer,
 	start_date datetime default null,
@@ -32,19 +34,20 @@ create table if not exists users (
 	PRIMARY KEY (id)
 );`
 
-const sql_registrations = `
+const sqlRegistrations = `
 create table if not exists registrations(
 	test text
 );`
 
-var create_statements = []string{
-	sql_version,
-	sql_users,
-	sql_registrations,
+var createStatements = []string{
+	sqlVersion,
+	sqlUsers,
+	sqlRegistrations,
 }
 
+// CreateTables creates all tables if not exist.
 func CreateTables() {
-	for idx, sql := range create_statements {
+	for idx, sql := range createStatements {
 		_, err := db.Exec(sql)
 		if err != nil {
 			panic(err)
@@ -53,20 +56,22 @@ func CreateTables() {
 	}
 }
 
-func UpdateVersion(revision_number int, comment string) error {
+// UpdateVersion adds version record to the version table.
+func UpdateVersion(revisionNumber int, comment string) error {
 	sql := "insert into version(revnum, comment) values (?, ?);"
 	stmt, err := db.Prepare(sql)
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(revision_number, comment)
+	_, err = stmt.Exec(revisionNumber, comment)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
+// GetVersion returns max version from version table.
 func GetVersion() (int, error) {
 	sql := "select max(revnum) from version;"
 	stmt, err := db.Prepare(sql)
@@ -83,14 +88,14 @@ func GetVersion() (int, error) {
 	if !rows.Next() {
 		return 0, errors.New("no results")
 	}
-	
+
 	var version int
 	err = rows.Scan(&version)
 	if err != nil {
 		return 0, err
 	}
 
-	return version, nil	
+	return version, nil
 }
 
 func generateRandomString(length int) string {
@@ -99,6 +104,7 @@ func generateRandomString(length int) string {
 	return base64.URLEncoding.EncodeToString(b)
 }
 
+// AddRegistration adds new user registration.
 func AddRegistration(name, email string) (id int, farsh string, err error) {
 	id = 0
 	farsh = ""
@@ -106,24 +112,28 @@ func AddRegistration(name, email string) (id int, farsh string, err error) {
 	return
 }
 
+// FindPendingRegistration gets pending user registration.
 func FindPendingRegistration(id int, farsh string) error {
 	return errors.New("registration not found")
 }
 
-func CompleteRegistration(id int) (user_id int, password string, err error) {
-	user_id = 0
+// CompleteRegistration removes registration info and creates user record.
+func CompleteRegistration(id int) (userID int, password string, err error) {
+	userID = 0
 	err = errors.New("cannot complete registration")
 	return
 }
 
-func LoginUser(user, password string) (user_id int, session_token string, err error) {
-	user_id = 0
-	session_token = ""
-	err = errors.New("cannot login user. Wrong password.")
+// LoginUser finds the user and generates session token.
+func LoginUser(user, password string) (userID int, sessionToken string, err error) {
+	userID = 0
+	sessionToken = ""
+	err = errors.New("cannot login user. Wrong password")
 	return
 }
 
-func AuthUser(user_id int, session_token string) (name string, err error) {
+// AuthUser checks user token.
+func AuthUser(userID int, sessionToken string) (name string, err error) {
 	name = ""
 	err = errors.New("invalid session token")
 	return
