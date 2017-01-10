@@ -25,6 +25,10 @@ Get chat project
 
 After running this command `~/go/bin` directory will contain built executables.
 
+* Read documentation
+
+	less ~/go/src/github.com/milla-v/chat/README.md
+
 * How to debug
 
 Start server

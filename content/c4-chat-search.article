@@ -10,9 +10,9 @@ We need to provide some search functionality so we can search thru the messages.
 
 * Database
 
-Open `src/chat/db/db.go` file and add code for messages table.
+Open `db/db.go` file and add code for messages table.
 
-	const sql_messages = `
+	const sqlMessages = `
 	create table if not exists messages(
 		id integer primary key,
 		ts datetime default null,
@@ -25,7 +25,7 @@ Open `src/chat/db/db.go` file and add code for messages table.
 		content_rowid=id
 	);`
 
-It should create 2 tables. One for structure information and one for fulltext search
+It should create 2 tables. One for structure information and one for full text search
 by message body.
 
 Add db functions
