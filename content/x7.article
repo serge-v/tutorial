@@ -1,0 +1,18 @@
+X7. Useful git commands
+2 Jun 2017
+Tags: first
+
+Serge Voilokov
+
+* Add all changed files for commit
+	git add -u
+
+* Add new file for commit
+	git add newfile.go
+
+* Commit
+	git commit -m 'description of change'
+
+* View commit history with file changes
+	git log -p
+
